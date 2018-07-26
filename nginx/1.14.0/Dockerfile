@@ -36,7 +36,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
         --with-http_auth_request_module \
         --with-http_xslt_module=dynamic \
         --with-http_image_filter_module=dynamic \
-        --with-http_geoip_module=dynamic \
+        --with-http_geoip_module \
         --with-threads \
         --with-stream \
         --with-stream_ssl_module \
@@ -51,8 +51,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
         --with-http_v2_module \
         --add-module=/usr/src/nginx-goodies-nginx-sticky-module \
     " \
-    && addgroup -S nginx \
-    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+    && addgroup -S www-data \
+    && adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G www-data www-data \
     && apk add --no-cache --virtual .build-deps \
         gcc \
         libc-dev \
@@ -87,6 +87,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && mkdir -p /usr/src \
     && tar -zxC /usr/src -f nginx.tar.gz \
     && tar -zxC /usr/src -f nginx-sticky-module.tar.gz \
+    && tar -zxC /usr/src -f ngx_http_geoip2_module.tar.gz \
     && rm nginx.tar.gz \
     && cd /usr/src/nginx-$NGINX_VERSION \
     && ./configure $CONFIG --with-debug \
@@ -94,7 +95,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && mv objs/nginx objs/nginx-debug \
     && mv objs/ngx_http_xslt_filter_module.so objs/ngx_http_xslt_filter_module-debug.so \
     && mv objs/ngx_http_image_filter_module.so objs/ngx_http_image_filter_module-debug.so \
-    && mv objs/ngx_http_geoip_module.so objs/ngx_http_geoip_module-debug.so \
     && mv objs/ngx_stream_geoip_module.so objs/ngx_stream_geoip_module-debug.so \
     && ./configure $CONFIG \
     && make -j$(getconf _NPROCESSORS_ONLN) \
@@ -107,7 +107,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && install -m755 objs/nginx-debug /usr/sbin/nginx-debug \
     && install -m755 objs/ngx_http_xslt_filter_module-debug.so /usr/lib/nginx/modules/ngx_http_xslt_filter_module-debug.so \
     && install -m755 objs/ngx_http_image_filter_module-debug.so /usr/lib/nginx/modules/ngx_http_image_filter_module-debug.so \
-    && install -m755 objs/ngx_http_geoip_module-debug.so /usr/lib/nginx/modules/ngx_http_geoip_module-debug.so \
     && install -m755 objs/ngx_stream_geoip_module-debug.so /usr/lib/nginx/modules/ngx_stream_geoip_module-debug.so \
     && ln -s ../../usr/lib/nginx/modules /etc/nginx/modules \
     && strip /usr/sbin/nginx* \
@@ -144,7 +143,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 #COPY nginx.conf /etc/nginx/nginx.conf
 #COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
 
