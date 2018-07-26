@@ -87,7 +87,6 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && mkdir -p /usr/src \
     && tar -zxC /usr/src -f nginx.tar.gz \
     && tar -zxC /usr/src -f nginx-sticky-module.tar.gz \
-    && tar -zxC /usr/src -f ngx_http_geoip2_module.tar.gz \
     && rm nginx.tar.gz \
     && cd /usr/src/nginx-$NGINX_VERSION \
     && ./configure $CONFIG --with-debug \
