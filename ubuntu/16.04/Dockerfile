@@ -5,7 +5,7 @@ MAINTAINER Sean Hsu <seanhsu0102@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
 
-COPY sources.list /etc/apt/
+# COPY sources.list /etc/apt/
 
 RUN apt-get update && \
     apt-get install -Vy \
