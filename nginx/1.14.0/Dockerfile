@@ -146,4 +146,6 @@ EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
 
+RUN mkdir /data/storage/nginx_cache
+
 CMD ["nginx", "-g", "daemon off;"]
