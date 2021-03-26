@@ -10,4 +10,4 @@ RUN add-apt-repository ppa:deadsnakes/ppa &&\
     python3-pip && \
     rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
-CMD ["python"]
+CMD ["/usr/bin/python3.7"]
